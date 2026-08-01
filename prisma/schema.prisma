@@ -1,13 +1,62 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
+// StreamFlixHD Prisma Schema
+// PostgreSQL (Supabase)
 
 generator client {
-  provider = "prisma-client"
-  output   = "../app/generated/prisma"
+  provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "postgresql"
+}
+
+model Admin {
+  id        Int      @id @default(autoincrement())
+  username  String   @unique
+  password  String
+  createdAt DateTime @default(now())
+
+  @@map("admins")
+}
+
+model Content {
+  id          Int       @id @default(autoincrement())
+  type        String // 'movie' | 'series'
+  title       String
+  photo       String?
+  link        String?
+  linkMovie   String?
+  musicFile   String?
+  description String?
+  actors      String?
+  isTop       Int       @default(0)
+  postedAt    DateTime?
+  postCount   Int       @default(0)
+  createdAt   DateTime  @default(now())
+
+  @@index([type])
+  @@index([isTop])
+  @@index([postedAt])
+  @@map("content")
+}
+
+model Setting {
+  key       String   @id
+  value     String?
+  updatedAt DateTime @updatedAt
+
+  @@map("settings")
+}
+
+model ScheduledUpload {
+  id          Int       @id @default(autoincrement())
+  contentId   Int
+  caption     String?
+  scheduledAt DateTime
+  status      String    @default("pending") // 'pending' | 'done' | 'failed'
+  response    String?
+  processedAt DateTime?
+  createdAt   DateTime  @default(now())
+
+  @@index([status, scheduledAt])
+  @@map("scheduled_uploads")
 }

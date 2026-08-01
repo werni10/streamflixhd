@@ -4,6 +4,8 @@ import { Footer } from "@/components/Footer";
 import { HeroSlider } from "@/components/HeroSlider";
 import { ContentRow } from "@/components/ContentRow";
 
+export const dynamic = "force-dynamic";
+
 export default async function Home() {
   const topMovies = await db.content.findMany({
     where: { isTop: 1, type: "movie" },

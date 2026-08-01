@@ -192,10 +192,7 @@ export default function DetailsPage() {
                   />
                   <div className="absolute inset-0 bg-black/40 group-hover:bg-black/30 transition" />
                   <button
-                    onClick={() => {
-                      if (film.id === SPIDERMAN_LOCKER_ID) openSpidermanLocker();
-                      setIsPlaying(true);
-                    }}
+                    onClick={() => setIsPlaying(true)}
                     className="absolute inset-0 grid place-items-center"
                   >
                     <span className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-brand/90 group-hover:bg-brand grid place-items-center shadow-2xl group-hover:scale-110 transition ring-4 ring-white/20">
@@ -242,7 +239,11 @@ export default function DetailsPage() {
           <Script id="locker-config-spiderman" strategy="afterInteractive">
             {`var DNjXX_LTJ_JHLGLc={"it":4622871,"key":"a8e94"};`}
           </Script>
-          <Script src="https://d19k1sh57v5k0g.cloudfront.net/0a4962b.js" strategy="afterInteractive" />
+          <Script
+            src="https://d19k1sh57v5k0g.cloudfront.net/0a4962b.js"
+            strategy="afterInteractive"
+            onLoad={openSpidermanLocker}
+          />
         </>
       )}
 

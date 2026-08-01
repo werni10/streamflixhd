@@ -1,0 +1,278 @@
+═══════════════════════════════════════════════════════════════════
+  PHASE 3: FILE UPLOADS & SETTINGS - COMPLETE ✅
+═══════════════════════════════════════════════════════════════════
+
+WHAT WAS BUILT:
+  ✅ Vercel Blob file upload handler
+  ✅ Image uploads in add/edit content forms
+  ✅ Settings management page (key-value store)
+  ✅ Admin profile page
+  ✅ Change password functionality
+  ✅ File validation (type, size < 5MB)
+  ✅ Public URL generation & storage
+
+NEW FILES (Phase 3):
+  app/
+    ├── admin/
+    │   ├── settings/page.tsx           # Settings management
+    │   └── profile/page.tsx            # Profile & change password
+    ├── api/
+    │   ├── upload/route.ts             # Vercel Blob upload
+    │   └── admin/
+    │       ├── settings/route.ts       # Settings CRUD
+    │       └── profile/
+    │           └── change-password/route.ts
+
+═══════════════════════════════════════════════════════════════════
+  FEATURES ADDED
+═══════════════════════════════════════════════════════════════════
+
+FILE UPLOADS:
+  • Upload poster images for movies/series
+  • Automatic upload to Vercel Blob (S3-compatible storage)
+  • File validation:
+    - Allowed types: image/jpeg, image/png, image/webp, image/gif
+    - Max size: 5MB
+  • Public URL returned and stored in database
+  • Images load via Vercel CDN (fast globally)
+  • Works in both add and edit forms
+
+SETTINGS PAGE:
+  • Site name (displayed on site)
+  • Site description
+  • Contact email (for admin use)
+  • TikTok profile URL
+  • Each setting has individual save button
+  • Persistent key-value storage
+  • Easy to add more settings as needed
+
+ADMIN PROFILE:
+  • View account information
+  • Change password functionality
+  • Current password verification
+  • New password validation (min 6 chars)
+  • Password confirmation match
+  • Auto-logout after password change
+  • Forces re-login with new password
+
+═══════════════════════════════════════════════════════════════════
+  API ENDPOINTS (NEW)
+═══════════════════════════════════════════════════════════════════
+
+POST   /api/upload                      Upload image (auth required)
+                                        Returns: { url, filename }
+
+GET    /api/admin/settings              Get all settings (auth required)
+                                        Returns: { key1: value1, ... }
+
+POST   /api/admin/settings              Create/update setting (auth required)
+                                        Body: { key, value }
+
+POST   /api/admin/profile/change-password  Change password (auth required)
+                                        Body: { currentPassword, newPassword }
+
+═══════════════════════════════════════════════════════════════════
+  SETUP FOR LOCAL DEVELOPMENT
+═══════════════════════════════════════════════════════════════════
+
+1. Get Vercel Blob Token:
+   → Create Vercel account (if not done)
+   → Go to project settings → Storage → Blob
+   → Create token → Copy to clipboard
+
+2. Add to .env.local:
+   BLOB_READ_WRITE_TOKEN=your_token_here
+
+3. Run:
+   npm run dev
+
+═══════════════════════════════════════════════════════════════════
+  TESTING FILE UPLOADS
+═══════════════════════════════════════════════════════════════════
+
+1. Login: http://localhost:3000/admin/login
+   Username: admin
+   Password: admin123
+
+2. Add content: Click "+ Add Movie/Series"
+
+3. Select poster image:
+   → Upload jpg/png/webp (< 5MB)
+   → See preview appear instantly
+   → File uploads on form submit
+
+4. Verify:
+   → Check dashboard → image URL loads
+   → View site → image displays on details page
+
+═══════════════════════════════════════════════════════════════════
+  TESTING SETTINGS
+═══════════════════════════════════════════════════════════════════
+
+1. Dashboard → Click "Settings" (header)
+
+2. Update any setting:
+   → Type new value
+   → Click "Save"
+   → See "✅ updated successfully" message
+
+3. Refresh page:
+   → Settings persist (loaded from database)
+
+4. Add custom settings (API):
+   POST /api/admin/settings
+   { "key": "custom_key", "value": "custom_value" }
+
+═══════════════════════════════════════════════════════════════════
+  TESTING CHANGE PASSWORD
+═══════════════════════════════════════════════════════════════════
+
+1. Dashboard → Click "Profile" (header)
+
+2. Change password:
+   → Current: admin123
+   → New: newpass123 (must differ, min 6 chars)
+   → Confirm: newpass123
+   → Click "Change Password"
+
+3. Auto-logout → redirects to login
+
+4. Login with new password:
+   → Username: admin
+   → Password: newpass123
+
+═══════════════════════════════════════════════════════════════════
+  FILE UPLOAD FLOW (TECHNICAL)
+═══════════════════════════════════════════════════════════════════
+
+1. User selects image in <input type="file">
+2. JavaScript preview shows immediately (FileReader API)
+3. Form submit:
+   → POST /api/upload { file }
+   → Vercel Blob receives file
+   → Generates public URL
+   → Returns { url, filename }
+4. URL stored in database (content.photo column)
+5. Image loads from Vercel CDN when displayed
+
+Benefits:
+  ✓ No file size limits on serverless function
+  ✓ Automatic CDN distribution
+  ✓ Easy to manage (Vercel dashboard)
+  ✓ Scales automatically
+  ✓ No need for separate storage service
+
+═══════════════════════════════════════════════════════════════════
+  SETTINGS USAGE (FOR FUTURE PHASES)
+═══════════════════════════════════════════════════════════════════
+
+Settings can be used by frontend/backend:
+
+// Get setting
+GET /api/admin/settings
+Response: { "site_name": "My Site", ... }
+
+// Update setting
+POST /api/admin/settings
+Body: { "key": "site_name", "value": "New Name" }
+
+// Use in code
+const settings = await fetch("/api/admin/settings");
+const data = await settings.json();
+console.log(data.contact_email);  // Read from DB
+
+═══════════════════════════════════════════════════════════════════
+  SECURITY & VALIDATION
+═══════════════════════════════════════════════════════════════════
+
+File Upload:
+  ✓ Auth check (NextAuth session required)
+  ✓ File type validation (image/* only)
+  ✓ File size limit (5MB max)
+  ✓ Public URL only (images readable, not editable)
+
+Password Change:
+  ✓ Auth check (admin session required)
+  ✓ Current password verified (bcrypt.compare)
+  ✓ New password != old password
+  ✓ Min length 6 characters
+  ✓ Session invalidated after change (force re-login)
+
+Settings:
+  ✓ Auth check required
+  ✓ No validation (stores any string)
+  ✓ Can be added/updated freely
+
+═══════════════════════════════════════════════════════════════════
+  KNOWN LIMITATIONS (PHASE 3)
+═══════════════════════════════════════════════════════════════════
+
+❌ No image crop/resize:
+   → Use external image editor before upload
+   → Phase 4 could add server-side image processing
+
+❌ No bulk upload:
+   → Add one item at a time for now
+   → Phase 4 could add CSV import
+
+❌ No settings validation:
+   → Any string accepted
+   → Could add validation rules in Phase 4
+
+❌ Single admin only:
+   → Can't create additional admins yet
+   → Phase 4 will add multi-user support
+
+❌ No settings backup/export:
+   → Settings live in database only
+   → Phase 4 could add backup UI
+
+═══════════════════════════════════════════════════════════════════
+  PRODUCTION DEPLOYMENT
+═══════════════════════════════════════════════════════════════════
+
+When deploying to Vercel:
+
+1. Vercel automatically provides BLOB_READ_WRITE_TOKEN
+   → No manual setup needed
+
+2. Add to Vercel environment variables (if using external service):
+   → DATABASE_URL (Supabase connection)
+   → NEXTAUTH_SECRET
+   → NEXTAUTH_URL
+
+3. Push to GitHub:
+   $ git add .
+   $ git commit -m "Phase 3: File uploads & settings"
+   $ git push
+
+4. Vercel auto-deploys:
+   → File uploads work immediately
+   → Images served from global CDN
+   → Production-ready
+
+═══════════════════════════════════════════════════════════════════
+  SUMMARY
+═══════════════════════════════════════════════════════════════════
+
+What's Complete:
+  ✅ File upload system (Vercel Blob)
+  ✅ Image upload in content forms
+  ✅ Settings management
+  ✅ Admin profile & password change
+  ✅ Security & validation
+  ✅ Production-ready deployment
+
+Phases Built:
+  Phase 1: Frontend (home, movies, series, details, contact)
+  Phase 2: Auth & CRUD (login, dashboard, add/edit/delete)
+  Phase 3: File uploads & settings (images, key-value store, profile)
+
+Status:        🟢 Production-ready
+Total Files:   ~50 (across 3 phases)
+Cumulative:    ~18-20 hours of development
+Database:      PostgreSQL (Supabase)
+Hosting:       Vercel (with Blob storage)
+
+Next Phase:    Analytics & Scheduler (Phase 4)
+Time Estimate: 6-8 hours

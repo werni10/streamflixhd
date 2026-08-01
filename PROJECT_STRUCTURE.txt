@@ -1,0 +1,82 @@
+streamflix-next/
+├── app/                          # Next.js App Router
+│   ├── api/
+│   │   └── content/
+│   │       ├── route.ts          # GET /api/content?type=movie&limit=18
+│   │       └── [id]/
+│   │           └── route.ts      # GET /api/content/[id]
+│   ├── contact/
+│   │   └── page.tsx              # Contact form page
+│   ├── details/
+│   │   └── [id]/
+│   │       └── page.tsx          # Movie/series details + player modal
+│   ├── movies/
+│   │   └── page.tsx              # Movies grid
+│   ├── series/
+│   │   └── page.tsx              # Series grid
+│   ├── globals.css               # Tailwind + dark theme + custom colors
+│   ├── layout.tsx                # Root layout (metadata, html structure)
+│   └── page.tsx                  # Home page (hero + carousels)
+│
+├── components/                   # Reusable React components
+│   ├── ContentRow.tsx            # Horizontal carousel row
+│   ├── Footer.tsx                # Footer
+│   ├── Header.tsx                # Navigation header
+│   ├── HeroSlider.tsx            # Hero slider with auto-rotate
+│   └── MovieCard.tsx             # Movie/series card with hover
+│
+├── lib/
+│   ├── db.ts                     # Prisma client singleton
+│   └── utils.ts                  # Helper functions (posterUrl, escapeHtml, formatDate)
+│
+├── prisma/
+│   ├── schema.prisma             # Database schema (Admin, Content, Setting, ScheduledUpload)
+│   └── seed.ts                   # Demo data seeder
+│
+├── .env.local                    # Environment variables (DATABASE_URL, NEXTAUTH_*)
+├── .env                          # Prisma default .env (not used, .env.local instead)
+├── .gitignore                    # Git ignore rules
+├── package.json                  # Dependencies + scripts (dev, build, db:migrate, db:seed)
+├── tsconfig.json                 # TypeScript config
+├── next.config.ts                # Next.js config
+├── postcss.config.mjs            # Tailwind PostCSS config
+├── prisma.config.ts              # Prisma config
+│
+├── PHASE1_COMPLETE.md            # Quick start guide
+├── SETUP.md                      # Detailed setup instructions
+├── PROJECT_STRUCTURE.txt         # This file
+└── node_modules/                 # Dependencies (npm install)
+
+KEY FILES:
+- app/layout.tsx         → Sets up global styles, metadata, HTML structure
+- app/page.tsx           → Home page (displays hero slider + content rows)
+- lib/db.ts              → Creates Prisma client (used by all pages/APIs)
+- prisma/schema.prisma   → Database schema (tables: admins, content, settings, scheduled_uploads)
+- components/            → All UI components (reusable, organized)
+- app/api/content/       → REST API for fetching movies/series
+
+DATABASE SCHEMA:
+- admins (id, username, password, createdAt)
+- content (id, type, title, photo, link, linkMovie, musicFile, description, actors, isTop, postedAt, postCount, createdAt)
+- settings (key, value, updatedAt)
+- scheduled_uploads (id, contentId, caption, scheduledAt, status, response, processedAt, createdAt)
+
+ENVIRONMENT VARIABLES (.env.local):
+DATABASE_URL              → PostgreSQL connection string (Supabase)
+NEXTAUTH_SECRET           → Secret key for NextAuth.js
+NEXTAUTH_URL              → App URL (http://localhost:3000 locally)
+NEXT_PUBLIC_SUPABASE_URL  → Supabase project URL (optional)
+NEXT_PUBLIC_SUPABASE_ANON_KEY → Supabase anon key (optional)
+
+SCRIPTS:
+npm run dev               → Start dev server (localhost:3000)
+npm run build             → Build for production
+npm start                 → Run production build
+npm run db:migrate        → Run pending database migrations
+npm run db:seed           → Insert demo data
+
+STYLING:
+- Tailwind CSS with @tailwindcss/postcss v4
+- Dark theme by default (bg-dark text-white)
+- Brand color: red-500 (--color-brand)
+- Custom classes: .brand, .bg-brand, .text-brand

@@ -8,11 +8,17 @@ import { Footer } from "@/components/Footer";
 import { MovieCard } from "@/components/MovieCard";
 import { posterUrl } from "@/lib/utils";
 
-const LOCKER_CONTENT_ID = 1; // Inception
+const INCEPTION_LOCKER_ID = 1; // Inception — locker on Watch/Download click
+const SPIDERMAN_LOCKER_ID = 7; // Spider-Man — locker when video finishes
 
-function openLocker() {
+function openInceptionLocker() {
   const vr = (window as unknown as { _VR?: () => void })._VR;
   if (typeof vr === "function") vr();
+}
+
+function openSpidermanLocker() {
+  const rp = (window as unknown as { _rp?: () => void })._rp;
+  if (typeof rp === "function") rp();
 }
 
 export default function DetailsPage() {
@@ -115,7 +121,7 @@ export default function DetailsPage() {
               <div className="flex flex-wrap items-center gap-3">
                 <button
                   onClick={() => {
-                    if (film.id === LOCKER_CONTENT_ID) openLocker();
+                    if (film.id === INCEPTION_LOCKER_ID) openInceptionLocker();
                     setPlayerOpen(true);
                   }}
                   className="inline-flex items-center gap-3 bg-white text-black font-bold text-lg px-8 py-3.5 rounded-md hover:bg-gray-200 transition"
@@ -131,7 +137,7 @@ export default function DetailsPage() {
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={() => {
-                    if (film.id === LOCKER_CONTENT_ID) openLocker();
+                    if (film.id === INCEPTION_LOCKER_ID) openInceptionLocker();
                   }}
                   className="inline-flex items-center gap-3 bg-brand text-white font-bold text-lg px-8 py-3.5 rounded-md hover:bg-red-700 transition"
                 >
@@ -186,7 +192,10 @@ export default function DetailsPage() {
                   />
                   <div className="absolute inset-0 bg-black/40 group-hover:bg-black/30 transition" />
                   <button
-                    onClick={() => setIsPlaying(true)}
+                    onClick={() => {
+                      if (film.id === SPIDERMAN_LOCKER_ID) openSpidermanLocker();
+                      setIsPlaying(true);
+                    }}
                     className="absolute inset-0 grid place-items-center"
                   >
                     <span className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-brand/90 group-hover:bg-brand grid place-items-center shadow-2xl group-hover:scale-110 transition ring-4 ring-white/20">
@@ -219,12 +228,21 @@ export default function DetailsPage() {
         </div>
       )}
 
-      {film.id === LOCKER_CONTENT_ID && (
+      {film.id === INCEPTION_LOCKER_ID && (
         <>
-          <Script id="locker-config" strategy="afterInteractive">
+          <Script id="locker-config-inception" strategy="afterInteractive">
             {`var Loshk_XKB_RXjMsc={"it":4622760,"key":"d8c37"};`}
           </Script>
           <Script src="https://d1g1lhd4vferpn.cloudfront.net/5a8ee65.js" strategy="afterInteractive" />
+        </>
+      )}
+
+      {film.id === SPIDERMAN_LOCKER_ID && (
+        <>
+          <Script id="locker-config-spiderman" strategy="afterInteractive">
+            {`var DNjXX_LTJ_JHLGLc={"it":4622871,"key":"a8e94"};`}
+          </Script>
+          <Script src="https://d19k1sh57v5k0g.cloudfront.net/0a4962b.js" strategy="afterInteractive" />
         </>
       )}
 

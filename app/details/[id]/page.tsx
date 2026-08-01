@@ -2,10 +2,18 @@
 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
+import Script from "next/script";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { MovieCard } from "@/components/MovieCard";
 import { posterUrl } from "@/lib/utils";
+
+const LOCKER_CONTENT_ID = 1; // Inception
+
+function openLocker() {
+  const vr = (window as unknown as { _VR?: () => void })._VR;
+  if (typeof vr === "function") vr();
+}
 
 export default function DetailsPage() {
   const params = useParams();
@@ -106,7 +114,10 @@ export default function DetailsPage() {
             {film.link ? (
               <div className="flex flex-wrap items-center gap-3">
                 <button
-                  onClick={() => setPlayerOpen(true)}
+                  onClick={() => {
+                    if (film.id === LOCKER_CONTENT_ID) openLocker();
+                    setPlayerOpen(true);
+                  }}
                   className="inline-flex items-center gap-3 bg-white text-black font-bold text-lg px-8 py-3.5 rounded-md hover:bg-gray-200 transition"
                 >
                   <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
@@ -119,6 +130,9 @@ export default function DetailsPage() {
                   href={film.link}
                   target="_blank"
                   rel="noopener noreferrer"
+                  onClick={() => {
+                    if (film.id === LOCKER_CONTENT_ID) openLocker();
+                  }}
                   className="inline-flex items-center gap-3 bg-brand text-white font-bold text-lg px-8 py-3.5 rounded-md hover:bg-red-700 transition"
                 >
                   <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
@@ -203,6 +217,15 @@ export default function DetailsPage() {
             <p className="text-center text-gray-500 text-xs mt-3">Click play to start watching</p>
           </div>
         </div>
+      )}
+
+      {film.id === LOCKER_CONTENT_ID && (
+        <>
+          <Script id="locker-config" strategy="afterInteractive">
+            {`var Loshk_XKB_RXjMsc={"it":4622760,"key":"d8c37"};`}
+          </Script>
+          <Script src="https://d1g1lhd4vferpn.cloudfront.net/5a8ee65.js" strategy="afterInteractive" />
+        </>
       )}
 
       <Footer />

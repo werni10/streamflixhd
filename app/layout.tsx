@@ -3,7 +3,7 @@ import "./globals.css";
 import { Providers } from "@/components/Providers";
 
 export const metadata: Metadata = {
-  title: "StreamFlixHD - Movies & Series",
+  title: "FlixBix - Movies & Series",
   description: "Watch your favorite movies and series online",
 };
 

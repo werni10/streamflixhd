@@ -72,9 +72,8 @@ export default function SetupPage() {
       <div className="w-full max-w-md">
         <div className="mb-8 text-center">
           <h1 className="text-3xl font-bold mb-2">
-            <span className="text-brand">Stream</span>
-            <span>Flix</span>
-            <span className="text-brand">HD</span>
+            <span className="text-brand">Flix</span>
+            <span>Bix</span>
           </h1>
           <p className="text-gray-400">Admin Setup</p>
           <p className="text-gray-500 text-sm mt-2">Create your first admin account</p>

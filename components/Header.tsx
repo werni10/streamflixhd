@@ -6,9 +6,8 @@ export function Header() {
       <nav className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
         <div className="flex items-center gap-8">
           <Link href="/" className="text-2xl font-bold">
-            <span className="text-brand">Stream</span>
-            <span className="text-white">Flix</span>
-            <span className="text-brand">HD</span>
+            <span className="text-brand">Flix</span>
+            <span className="text-white">Bix</span>
           </Link>
           <div className="hidden md:flex gap-6 text-sm font-semibold">
             <Link href="/" className="text-gray-300 hover:text-white transition">Home</Link>

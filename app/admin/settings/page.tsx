@@ -115,7 +115,7 @@ export default function SettingsPage() {
               type="text"
               value={settings.site_name}
               onChange={(e) => setSettings({ ...settings, site_name: e.target.value })}
-              placeholder="StreamFlixHD"
+              placeholder="FlixBix"
               className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 focus:outline-none focus:border-brand mb-4"
             />
             <button

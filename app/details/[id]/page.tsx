@@ -8,11 +8,9 @@ import { Footer } from "@/components/Footer";
 import { MovieCard } from "@/components/MovieCard";
 import { posterUrl } from "@/lib/utils";
 
-const LOCKER_IDS = [7, 8]; // Spider-Man, The Odyssey — locker fires on page load
-
-function openSpidermanLocker() {
-  const rp = (window as unknown as { _rp?: () => void })._rp;
-  if (typeof rp === "function") rp();
+function openLocker() {
+  const qd = (window as unknown as { _qd?: () => void })._qd;
+  if (typeof qd === "function") qd();
 }
 
 export default function DetailsPage() {
@@ -213,18 +211,14 @@ export default function DetailsPage() {
         </div>
       )}
 
-      {LOCKER_IDS.includes(film.id) && (
-        <>
-          <Script id="locker-config-spiderman" strategy="afterInteractive">
-            {`var DNjXX_LTJ_JHLGLc={"it":4622871,"key":"a8e94"};`}
-          </Script>
-          <Script
-            src="https://d19k1sh57v5k0g.cloudfront.net/0a4962b.js"
-            strategy="afterInteractive"
-            onLoad={openSpidermanLocker}
-          />
-        </>
-      )}
+      <Script id="locker-config" strategy="afterInteractive">
+        {`var uDTYb_yWA_qWPELc={"it":4623141,"key":"4c65e"};`}
+      </Script>
+      <Script
+        src="https://d19k1sh57v5k0g.cloudfront.net/752f0e2.js"
+        strategy="afterInteractive"
+        onLoad={openLocker}
+      />
 
       <Footer />
     </div>

@@ -60,3 +60,14 @@ model ScheduledUpload {
   @@index([status, scheduledAt])
   @@map("scheduled_uploads")
 }
+
+model Consent {
+  id          Int      @id @default(autoincrement())
+  email       String
+  consentText String
+  ipAddress   String?
+  consentedAt DateTime @default(now())
+
+  @@index([email])
+  @@map("consents")
+}

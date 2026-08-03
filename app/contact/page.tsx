@@ -6,8 +6,10 @@ import { Footer } from "@/components/Footer";
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({ name: "", email: "", message: "" });
+  const [optIn, setOptIn] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
+  const [submitting, setSubmitting] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -28,8 +30,30 @@ export default function ContactPage() {
       return;
     }
 
-    setSubmitted(true);
-    setFormData({ name: "", email: "", message: "" });
+    setSubmitting(true);
+    try {
+      if (optIn) {
+        const res = await fetch("/api/consent", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email: formData.email }),
+        });
+        if (!res.ok) {
+          const data = await res.json();
+          setError(data.error || "Failed to record consent");
+          setSubmitting(false);
+          return;
+        }
+      }
+
+      setSubmitted(true);
+      setFormData({ name: "", email: "", message: "" });
+      setOptIn(false);
+    } catch (err) {
+      setError("An error occurred. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -83,8 +107,32 @@ export default function ContactPage() {
               className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 focus:outline-none focus:border-brand transition"
             />
           </div>
-          <button className="bg-brand hover:bg-red-700 font-bold px-8 py-3 rounded-lg transition">
-            Send Message
+          <div className="flex items-start gap-3">
+            <input
+              type="checkbox"
+              id="optIn"
+              checked={optIn}
+              onChange={(e) => setOptIn(e.target.checked)}
+              className="w-4 h-4 mt-1"
+            />
+            <label htmlFor="optIn" className="text-sm text-gray-400">
+              I agree to receive occasional updates from FlixBix and consent to the processing of
+              my email address as described in the{" "}
+              <a href="/privacy" className="text-brand hover:underline">
+                Privacy Policy
+              </a>
+              . (Optional &mdash; see our{" "}
+              <a href="/consent" className="text-brand hover:underline">
+                Consent &amp; Data Use
+              </a>{" "}
+              page for details.)
+            </label>
+          </div>
+          <button
+            disabled={submitting}
+            className="bg-brand hover:bg-red-700 disabled:opacity-50 font-bold px-8 py-3 rounded-lg transition"
+          >
+            {submitting ? "Sending..." : "Send Message"}
           </button>
         </form>
       </section>
